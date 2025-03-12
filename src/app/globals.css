@@ -19,3 +19,23 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+/* Override Intro.js styles */
+.introjs-tooltip {
+  background-color: #3b82f6 !important; /* Blue background */
+  color: #ffffff !important; /* White text */
+  border-radius: 8px !important; /* Rounded corners */
+}
+
+.introjs-button {
+  background-color: #1e40af !important; /* Darker blue for buttons */
+  color: #ffffff !important; /* White text */
+  border-radius: 4px !important; /* Rounded corners */
+}
+
+.introjs-button:hover {
+  background-color: #1e3a8a !important; /* Darker blue on hover */
+}
+
+.introjs-overlay {
+  background-color: rgba(0, 0, 0, 0.5) !important; /* Semi-transparent black overlay */
+}

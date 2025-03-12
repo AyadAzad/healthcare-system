@@ -1,6 +1,47 @@
-import React from 'react';
-import AppointmentsSection from "@/app/doctor/AppointmentSection";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+
 const DoctorDashboard = () => {
+    const searchParams = useSearchParams();
+    const firstName = searchParams.get("firstName");
+    const doctorId = searchParams.get("doctorId");
+
+    // State for doctor's data
+    const [doctorData, setDoctorData] = useState({
+        totalPatients: 0,
+        newPatients: 0,
+        todaysAppointments: 0,
+        upcomingAppointments: 0,
+        totalConsultations: 0,
+        totalPrescriptions: 0,
+        patients: [], // Add patients to the state
+    });
+
+    // Redirect if not authorized
+    if (!firstName || !doctorId) {
+        return <div>Unauthorized access</div>;
+    }
+
+    // Fetch doctor's data from the database
+    useEffect(() => {
+        const fetchDoctorData = async () => {
+            try {
+                const response = await fetch(`/api/doctor-dashboard?doctorId=${doctorId}`);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch doctor data");
+                }
+                const data = await response.json();
+                setDoctorData(data);
+            } catch (error) {
+                console.error("Error fetching doctor data:", error);
+            }
+        };
+
+        fetchDoctorData();
+    }, [doctorId]);
+
     return (
         <div className="flex h-screen bg-gray-100">
             {/* Sidebar */}
@@ -9,17 +50,17 @@ const DoctorDashboard = () => {
                     <span className="text-2xl font-extrabold">HealthCareIQ</span>
                 </div>
                 <nav>
-                    <a href="#" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-800">
+                    <a href={`/doctor?firstName=${firstName}&doctorId=${doctorId}`} className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-800">
                         Dashboard
                     </a>
-                    <a href="#" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-800">
-                        Patients
+                    <a href={`/doctor/appointments?firstName=${firstName}&doctorId=${doctorId}`} className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-800">
+                        Appointments
                     </a>
-                    <a href="#" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-800">
-                        Reports
+                    <a href={`/doctor/video-calls?firstName=${firstName}&doctorId=${doctorId}`} className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-800">
+                        Video Calls
                     </a>
-                    <a href="#" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-800">
-                        Settings
+                    <a href={`/doctor/quick-advices?firstName=${firstName}&doctorId=${doctorId}`} className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-800">
+                        Quick Advices
                     </a>
                 </nav>
             </div>
@@ -29,7 +70,7 @@ const DoctorDashboard = () => {
                 {/* Top Navigation */}
                 <header className="flex justify-between items-center py-4 px-6 bg-white border-b-4 border-blue-900">
                     <div className="flex items-center">
-                        <h1 className="text-gray-800 text-xl font-bold">Doctor Dashboard</h1>
+                        <h1 className="text-gray-800 text-xl font-bold">Welcome Dr {firstName}</h1>
                     </div>
                     <div className="flex items-center">
                         <div className="relative">
@@ -49,11 +90,11 @@ const DoctorDashboard = () => {
                                 <div className="space-y-4">
                                     <div className="flex items-center justify-between">
                                         <span>Total Patients</span>
-                                        <span className="font-bold">1,234</span>
+                                        <span className="font-bold">{doctorData.totalPatients}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <span>New Patients</span>
-                                        <span className="font-bold">56</span>
+                                        <span className="font-bold">{doctorData.newPatients}</span>
                                     </div>
                                 </div>
                             </div>
@@ -64,11 +105,11 @@ const DoctorDashboard = () => {
                                 <div className="space-y-4">
                                     <div className="flex items-center justify-between">
                                         <span>Today's Appointments</span>
-                                        <span className="font-bold">12</span>
+                                        <span className="font-bold">{doctorData.todaysAppointments}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <span>Upcoming Appointments</span>
-                                        <span className="font-bold">34</span>
+                                        <span className="font-bold">{doctorData.upcomingAppointments}</span>
                                     </div>
                                 </div>
                             </div>
@@ -79,18 +120,17 @@ const DoctorDashboard = () => {
                                 <div className="space-y-4">
                                     <div className="flex items-center justify-between">
                                         <span>Consultations</span>
-                                        <span className="font-bold">789</span>
+                                        <span className="font-bold">{doctorData.totalConsultations}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <span>Prescriptions</span>
-                                        <span className="font-bold">456</span>
+                                        <span className="font-bold">{doctorData.totalPrescriptions}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </main>
-                <AppointmentsSection/>
             </div>
         </div>
     );

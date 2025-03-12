@@ -1,44 +1,29 @@
 // app/api/videoCalls/route.js
-import db from '/database/db';
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export async function POST(request) {
-    const { patient_id, doctor_id, call_date, call_time } = await request.json();
+    try {
+        const { patient_id, doctor_id, call_date, call_time } = await request.json();
 
-    return new Promise((resolve, reject) => {
-        const query = `
-      INSERT INTO video_calls (patient_id, doctor_id, call_date, call_time)
-      VALUES (?, ?, ?, ?)
-    `;
-
-        db.run(query, [patient_id, doctor_id, call_date, call_time], function (err) {
-            if (err) {
-                resolve(NextResponse.json({ error: err.message }, { status: 500 }));
-            } else {
-                resolve(NextResponse.json({ id: this.lastID }, { status: 201 }));
-            }
+        // Create a new video call
+        const videoCall = await prisma.videoCall.create({
+            data: {
+                patientId: patient_id,
+                doctorId: doctor_id,
+                callDate: new Date(call_date),
+                callTime: call_time,
+            },
         });
-    });
-}
 
-export async function GET(request) {
-    const { searchParams } = new URL(request.url);
-    const patient_id = searchParams.get('patient_id');
-
-    return new Promise((resolve, reject) => {
-        const query = `
-      SELECT v.id, d.name AS doctor_name, v.call_date, v.call_time, v.status
-      FROM video_calls v
-      JOIN doctors d ON v.doctor_id = d.id
-      WHERE v.patient_id = ?
-    `;
-
-        db.all(query, [patient_id], (err, rows) => {
-            if (err) {
-                resolve(NextResponse.json({ error: err.message }, { status: 500 }));
-            } else {
-                resolve(NextResponse.json(rows, { status: 200 }));
-            }
-        });
-    });
+        return NextResponse.json(videoCall, { status: 201 });
+    } catch (error) {
+        console.error("Error scheduling video call:", error);
+        return NextResponse.json(
+            { error: "Failed to schedule video call" },
+            { status: 500 }
+        );
+    }
 }

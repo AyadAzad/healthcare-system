@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Patient {
+  id        Int      @id @default(autoincrement())
+  firstName String
+  lastName  String
+  email     String   @unique
+  password  String
+  phone     String?
+  city      String?
+  createdAt DateTime @default(now())
+  appointments Appointment[]
+  videocalls VideoCall[]
+  quickadvices QuickAdvice[]
+  testResult TestResult[]
+}
+
+model Hospital {
+  id      Int      @id @default(autoincrement())
+  name    String
+  city    String
+  services String
+  address String
+  doctors Doctor[]
+}
+
+model Doctor {
+  id           Int      @id @default(autoincrement())
+  hospitalId   Int
+  hospital     Hospital @relation(fields: [hospitalId], references: [id])
+  firstName    String
+  lastName     String
+  email        String @unique
+  password     String
+  specialty    String
+  phone        String?
+  address      String?
+  experience   Int
+  availableTime String
+  fee          Int
+  appointments Appointment[]
+  videocalls VideoCall[]
+}
+
+model Appointment {
+  id              Int      @id @default(autoincrement())
+  patientId       Int
+  doctorId        Int
+  appointmentDate DateTime
+  appointmentTime String
+  note            String?  // New field for the note
+  imageUrl        String?  // New field for the image URL
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relationships
+  patient Patient @relation(fields: [patientId], references: [id])
+  doctor  Doctor  @relation(fields: [doctorId], references: [id])
+}
+model VideoCall {
+  id        Int      @id @default(autoincrement())
+  patientId Int
+  doctorId  Int
+  callDate  DateTime
+  callTime  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  patient Patient @relation(fields: [patientId], references: [id])
+  doctor  Doctor  @relation(fields: [doctorId], references: [id])
+}
+
+model QuickAdvice {
+  id        Int      @id @default(autoincrement())
+  patientId Int
+  question  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  patient Patient @relation(fields: [patientId], references: [id])
+}
+model TestResult {
+  id          Int      @id @default(autoincrement())
+  patientId   Int
+  testName    String
+  result      String
+  date        DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime? @updatedAt
+
+  // Relationships
+  patient Patient @relation(fields: [patientId], references: [id])
+}

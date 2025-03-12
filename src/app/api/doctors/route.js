@@ -1,20 +1,34 @@
-import db from '/database/db';
-import { NextResponse } from 'next/server';
+// app/api/doctors/route.js
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 // Fetch all doctors
 export async function GET() {
-    return new Promise((resolve, reject) => {
-        const query = `
-      SELECT id, first_name, last_name, specialty, phone, address, experience, available_time, fee
-      FROM doctors
-    `;
-
-        db.all(query, [], (err, rows) => {
-            if (err) {
-                resolve(NextResponse.json({ error: err.message }, { status: 500 }));
-            } else {
-                resolve(NextResponse.json(rows, { status: 200 }));
-            }
+    try {
+        // Fetch all doctors from the database using Prisma
+        const doctors = await prisma.doctor.findMany({
+            select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                specialty: true,
+                phone: true,
+                address: true,
+                experience: true,
+                availableTime: true,
+                fee: true,
+            },
         });
-    });
+
+        // Return the doctors as a JSON response
+        return NextResponse.json(doctors, { status: 200 });
+    } catch (error) {
+        console.error("Error fetching doctors:", error);
+        return NextResponse.json(
+            { error: "An error occurred while fetching doctors" },
+            { status: 500 }
+        );
+    }
 }
