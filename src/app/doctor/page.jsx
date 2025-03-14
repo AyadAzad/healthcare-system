@@ -50,18 +50,31 @@ const DoctorDashboard = () => {
                     <span className="text-2xl font-extrabold">HealthCareIQ</span>
                 </div>
                 <nav>
-                    <a href={`/doctor?firstName=${firstName}&doctorId=${doctorId}`} className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-800">
+                    <a href={`/doctor?firstName=${firstName}&doctorId=${doctorId}`}
+                       className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-800">
                         Dashboard
                     </a>
-                    <a href={`/doctor/appointments?firstName=${firstName}&doctorId=${doctorId}`} className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-800">
+                    <a href={`/doctor/appointments?firstName=${firstName}&doctorId=${doctorId}`}
+                       className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-800">
                         Appointments
                     </a>
-                    <a href={`/doctor/video-calls?firstName=${firstName}&doctorId=${doctorId}`} className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-800">
+                    <a href={`/doctor/video-calls?firstName=${firstName}&doctorId=${doctorId}`}
+                       className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-800">
                         Video Calls
                     </a>
-                    <a href={`/doctor/quick-advices?firstName=${firstName}&doctorId=${doctorId}`} className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-800">
+                    <a href={`/doctor/quick-advices?firstName=${firstName}&doctorId=${doctorId}`}
+                       className="block py-2.5 px-4 rounded transition duration-200 hover:bg-blue-800">
                         Quick Advices
                     </a>
+                    <button
+                        onClick={() => {
+                            document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                            router.push("/login");
+                        }}
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg"
+                    >
+                        Logout
+                    </button>
                 </nav>
             </div>
 

@@ -1,20 +1,37 @@
-import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 
-export async function middleware(req) {
-    const token = await getToken({ req });
+const JWT_SECRET = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"; // Replace with the same secret key used in the login API
 
-    if (req.nextUrl.pathname.startsWith("/doctor") && token?.role !== "doctor") {
-        return NextResponse.redirect(new URL("/login", req.url));
+export async function middleware(request) {
+    const token = request.cookies.get("token")?.value;
+
+
+    // For other routes, verify the token
+    if (!token) {
+        return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    if (req.nextUrl.pathname.startsWith("/patient") && token?.role !== "patient") {
-        return NextResponse.redirect(new URL("/login", req.url));
-    }
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        console.log("Decoded token:", decoded); // Debugging
 
-    return NextResponse.next();
+        // Redirect based on role
+        if (request.nextUrl.pathname.startsWith("/doctor") && decoded.role !== "doctor") {
+            return NextResponse.redirect(new URL("/login", request.url));
+        }
+
+        if (request.nextUrl.pathname.startsWith("/patient") && decoded.role !== "patient") {
+            return NextResponse.redirect(new URL("/login", request.url));
+        }
+
+        return NextResponse.next();
+    } catch (error) {
+        console.error("Invalid token:", error); // Debugging
+        return NextResponse.redirect(new URL("/login", request.url));
+    }
 }
 
 export const config = {
-    matcher: ["/doctor/:path*", "/patient/:path*"]
+    matcher: ["/doctor/:path*", "/patient/:path*"],
 };

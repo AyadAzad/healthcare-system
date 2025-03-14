@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import NavBar from "@/app/NavBar"; // Import the NavBar component
 
@@ -18,8 +18,28 @@ export default function DoctorSignup() {
         fee: 0,
         hospitalId: 0,
     });
+    const [hospitals, setHospitals] = useState([]); // State to store hospitals
     const [error, setError] = useState("");
     const router = useRouter();
+
+    // Fetch hospitals on component mount
+    useEffect(() => {
+        const fetchHospitals = async () => {
+            try {
+                const response = await fetch("/api/hospitals");
+                if (!response.ok) {
+                    throw new Error("Failed to fetch hospitals");
+                }
+                const data = await response.json();
+                setHospitals(data);
+            } catch (error) {
+                console.error("Error fetching hospitals:", error);
+                setError("Failed to fetch hospitals. Please try again later.");
+            }
+        };
+
+        fetchHospitals();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -148,13 +168,20 @@ export default function DoctorSignup() {
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="block text-gray-700">Hospital ID</label>
-                            <input
-                                type="number"
+                            <label className="block text-gray-700">Hospital</label>
+                            <select
                                 value={formData.hospitalId}
                                 onChange={(e) => setFormData({ ...formData, hospitalId: parseInt(e.target.value) })}
                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
+                                required
+                            >
+                                <option value={0}>Select a hospital</option>
+                                {hospitals.map((hospital) => (
+                                    <option key={hospital.id} value={hospital.id}>
+                                        {hospital.name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                         <button
                             type="submit"

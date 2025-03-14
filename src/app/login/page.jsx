@@ -15,6 +15,14 @@ export default function Login() {
         e.preventDefault();
         setError(""); // Clear previous errors
 
+        // Handle admin login
+        if (email === "admin@admin.com" && password === "admin") {
+            // Store a dummy token for admin (optional)
+            document.cookie = `token=admin-token; path=/; max-age=3600`; // Expires in 1 hour
+            router.push("/admin/dashboard");
+            return; // Exit the function early
+        }
+
         try {
             const response = await fetch("/api/login", {
                 method: "POST",
@@ -26,12 +34,14 @@ export default function Login() {
             console.log("API response:", data); // Debugging
 
             if (response.ok) {
+                // Store the token in cookies
+                document.cookie = `token=${data.token}; path=/; max-age=3600`; // Expires in 1 hour
+
+                // Redirect based on role
                 if (data.role === "patient") {
                     router.push(`/patient?firstName=${data.firstName}&patientId=${data.id}`);
                 } else if (data.role === "doctor") {
                     router.push(`/doctor?firstName=${data.firstName}&doctorId=${data.id}`);
-                } else if (data.role === "admin") {
-                    router.push("/admin/dashboard");
                 }
             } else {
                 setError(data.error || "Login failed");

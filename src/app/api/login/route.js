@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
+const JWT_SECRET = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"; // Replace with a secure secret key
 
 export async function POST(request) {
     try {
@@ -12,8 +14,13 @@ export async function POST(request) {
         const patient = await prisma.patient.findUnique({ where: { email } });
         if (patient && patient.password === password) {
             console.log("Patient login successful"); // Debugging
+            const token = jwt.sign(
+                { id: patient.id, role: "patient", firstName: patient.firstName },
+                JWT_SECRET,
+                { expiresIn: "1h" } // Token expires in 1 hour
+            );
             return NextResponse.json(
-                { role: "patient", firstName: patient.firstName, id: patient.id },
+                { role: "patient", firstName: patient.firstName, id: patient.id, token },
                 { status: 200 }
             );
         }
@@ -36,8 +43,13 @@ export async function POST(request) {
                     );
                 } else if (doctor.status === "approved") {
                     console.log("Doctor login successful"); // Debugging
+                    const token = jwt.sign(
+                        { id: doctor.id, role: "doctor", firstName: doctor.firstName },
+                        JWT_SECRET,
+                        { expiresIn: "1h" } // Token expires in 1 hour
+                    );
                     return NextResponse.json(
-                        { role: "doctor", firstName: doctor.firstName, id: doctor.id },
+                        { role: "doctor", firstName: doctor.firstName, id: doctor.id, token },
                         { status: 200 }
                     );
                 }
@@ -50,14 +62,6 @@ export async function POST(request) {
             }
         }
 
-        // Check if the user is the admin
-        if (email === "admin@admin.com" && password === "admin") {
-            console.log("Admin login successful"); // Debugging
-            return NextResponse.json(
-                { role: "admin" },
-                { status: 200 }
-            );
-        }
 
         // If no match is found
         console.log("Invalid credentials"); // Debugging

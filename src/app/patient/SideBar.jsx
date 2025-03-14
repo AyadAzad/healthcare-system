@@ -35,9 +35,14 @@ const SideBar = () =>{
                 <a href="#" className="block py-2.5 px-4 rounded hover:bg-blue-800 transition duration-200">
                     Settings
                 </a>
-                <button onClick={handleLogout}
-                        className="block py-2.5 px-4 rounded hover:bg-blue-800 transition duration-200">
-                    LogOut
+                <button
+                    onClick={() => {
+                        document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                        router.push("/login");
+                    }}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg"
+                >
+                    Logout
                 </button>
             </nav>
         </div>
