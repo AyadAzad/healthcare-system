@@ -1,15 +1,18 @@
 import Image from "next/image";
 import React from "react";
-
+import Link from "next/link";
 const NavBar = () =>{
     return (
         <>
             <nav className="fixed top-0 left-0 right-0 z-20 p-2 flex items-center justify-between bg-blue-900">
                 {/* Logo */}
+                <Link href="/">
+
                 <div className="flex items-center">
                     <Image alt="logo" src="/logo.png" width={40} height={40}/>
                     <span className="ml-3 text-2xl font-bold text-white">HealthCareIQ</span>
                 </div>
+                </Link>
 
                 {/* Navigation Links */}
                 <div className="hidden md:flex space-x-8">

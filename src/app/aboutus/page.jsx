@@ -1,5 +1,6 @@
 import React from 'react';
 import NavBar from "@/app/NavBar";
+import Link from "next/link";
 
 const AboutUsSection = () => {
     const members = [
@@ -64,10 +65,12 @@ const AboutUsSection = () => {
                         We are always looking for passionate individuals to join our team. Explore career opportunities
                         with us today!
                     </p>
+                    <Link href="/careers">
                     <button
                         className="bg-white text-blue-900 font-bold py-3 px-8 rounded-full hover:bg-blue-100 transition duration-200">
                         Careers
                     </button>
+                    </Link>
                 </div>
             </div>
         </div>
