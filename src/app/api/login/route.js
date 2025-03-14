@@ -20,10 +20,41 @@ export async function POST(request) {
 
         // Check if the user is a doctor
         const doctor = await prisma.doctor.findUnique({ where: { email } });
-        if (doctor && doctor.password === password) {
-            console.log("Doctor login successful"); // Debugging
+        if (doctor) {
+            if (doctor.password === password) {
+                if (doctor.status === "rejected") {
+                    console.log("Doctor account rejected"); // Debugging
+                    return NextResponse.json(
+                        { error: "Your account has been rejected. Please contact support." },
+                        { status: 403 }
+                    );
+                } else if (doctor.status === "pending") {
+                    console.log("Doctor account pending approval"); // Debugging
+                    return NextResponse.json(
+                        { error: "Your account is pending approval. Please wait for admin approval." },
+                        { status: 403 }
+                    );
+                } else if (doctor.status === "approved") {
+                    console.log("Doctor login successful"); // Debugging
+                    return NextResponse.json(
+                        { role: "doctor", firstName: doctor.firstName, id: doctor.id },
+                        { status: 200 }
+                    );
+                }
+            } else {
+                console.log("Invalid doctor password"); // Debugging
+                return NextResponse.json(
+                    { error: "Invalid email or password" },
+                    { status: 401 }
+                );
+            }
+        }
+
+        // Check if the user is the admin
+        if (email === "admin@admin.com" && password === "admin") {
+            console.log("Admin login successful"); // Debugging
             return NextResponse.json(
-                { role: "doctor", firstName: doctor.firstName, id: doctor.id },
+                { role: "admin" },
                 { status: 200 }
             );
         }

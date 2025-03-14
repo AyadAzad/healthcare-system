@@ -29,13 +29,11 @@ export default function Login() {
                 if (data.role === "patient") {
                     router.push(`/patient?firstName=${data.firstName}&patientId=${data.id}`);
                 } else if (data.role === "doctor") {
-                    router.push(`/doctor?firstName=${data.firstName}&doctorId=${data.id}`)
-                    }
-            }
-            else if (email === "admin@admin.com" && password === "admin") {
-                router.push('/admin/dashboard');
-            }
-            else {
+                    router.push(`/doctor?firstName=${data.firstName}&doctorId=${data.id}`);
+                } else if (data.role === "admin") {
+                    router.push("/admin/dashboard");
+                }
+            } else {
                 setError(data.error || "Login failed");
             }
         } catch (err) {

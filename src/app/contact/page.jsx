@@ -1,3 +1,5 @@
+"use client"
+
 import NavBar from "@/app/NavBar";
 
 const ContactUs = () => {

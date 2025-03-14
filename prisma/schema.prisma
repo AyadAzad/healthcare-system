@@ -45,6 +45,7 @@ model Doctor {
   experience   Int
   availableTime String
   fee          Int
+  status       String   @default("pending")
   appointments Appointment[]
   videocalls VideoCall[]
 }
