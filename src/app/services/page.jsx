@@ -3,6 +3,7 @@
 import React from 'react';
 import NavBar from '@/app/NavBar';
 import Link from "next/link";
+import Footer from "@/app/Footer";
 
 function ServicesSection() {
     return (
@@ -73,20 +74,8 @@ function ServicesSection() {
                 </div>
 
                 {/* Footer */}
-                <footer className="w-full bg-gray-800 text-white py-8 mt-20">
-                    <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
-                        <div className="text-center md:text-left mb-4 md:mb-0">
-                            <h3 className="text-2xl font-bold">HealthCare Services</h3>
-                            <p className="text-gray-400">Your health, our priority.</p>
-                        </div>
-                        <div className="flex space-x-6">
-                            <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">Privacy Policy</a>
-                            <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">Terms of Service</a>
-                            <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">Contact Us</a>
-                        </div>
-                    </div>
-                </footer>
             </section>
+                <Footer/>
         </>
     );
 }

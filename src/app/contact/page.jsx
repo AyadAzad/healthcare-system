@@ -1,6 +1,7 @@
 "use client"
 
 import NavBar from "@/app/NavBar";
+import Footer from "@/app/Footer";
 
 const ContactUs = () => {
     return (
@@ -128,6 +129,7 @@ const ContactUs = () => {
                     </div>
                 </div>
             </section>
+            <Footer/>
         </>
     )
 }

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import NavBar from "@/app/NavBar";
 import { FaSearch } from "react-icons/fa";
-
+import Footer from "@/app/Footer";
 export default function HospitalsPage() {
     const [hospitals, setHospitals] = useState([]); // All hospitals fetched from the API
     const [filteredHospitals, setFilteredHospitals] = useState([]); // Hospitals filtered based on search
@@ -117,6 +117,7 @@ export default function HospitalsPage() {
                     )}
                 </div>
             </div>
+            <Footer/>
         </>
     );
 }

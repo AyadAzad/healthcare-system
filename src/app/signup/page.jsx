@@ -28,7 +28,7 @@ export default function Signup() {
         });
 
         if (response.ok) {
-            router.push("/patient-login");
+            router.push("/login");
         } else {
             alert("Signup failed");
         }
@@ -166,6 +166,7 @@ export default function Signup() {
                         </p>
                     </div>
                 </div>
+
             </div>
         </>
     );

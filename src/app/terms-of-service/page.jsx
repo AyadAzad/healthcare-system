@@ -2,6 +2,7 @@
 
 import React from 'react';
 import NavBar from "@/app/NavBar";
+import Footer from "@/app/Footer";
 
 const TermsOfServicePage = () => {
     return (
@@ -65,26 +66,9 @@ const TermsOfServicePage = () => {
                 </div>
 
                 {/* Footer */}
-                <footer className="bg-gray-800 dark:bg-gray-900 text-white py-8 transition-colors duration-500">
-                    <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
-                        <div className="text-center md:text-left mb-4 md:mb-0">
-                            <h3 className="text-2xl font-bold">HealthCareIQ</h3>
-                            <p className="text-gray-400">Your health, our priority.</p>
-                        </div>
-                        <div className="flex space-x-6">
-                            <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">
-                                Privacy Policy
-                            </a>
-                            <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">
-                                Terms of Service
-                            </a>
-                            <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">
-                                Contact Us
-                            </a>
-                        </div>
-                    </div>
-                </footer>
+                <Footer/>
             </div>
+
         </>
     );
 };

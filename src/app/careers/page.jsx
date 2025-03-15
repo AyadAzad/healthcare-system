@@ -3,6 +3,7 @@
 import React from 'react';
 import NavBar from "@/app/NavBar";
 import Link from "next/link";
+import Footer from "@/app/Footer";
 
 const CareersPage = () => {
     const jobOpenings = [
@@ -106,9 +107,11 @@ const CareersPage = () => {
                                         <li key={index}>{requirement}</li>
                                     ))}
                                 </ul>
+                                <Link href="/contact">
                                 <button className="bg-blue-900 text-white font-bold py-2 px-6 rounded-full hover:bg-blue-700 transition duration-200">
                                     Apply Now
                                 </button>
+                                </Link>
                             </div>
                         ))}
                     </div>
@@ -127,6 +130,7 @@ const CareersPage = () => {
                     </div>
                 </div>
             </div>
+            <Footer/>
         </>
     );
 };
